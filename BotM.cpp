@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#include <string>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -17,7 +18,7 @@ using namespace std;
 
 char* syncCommand();
 char* attackCommand();
-char time[256];
+char  attack_time[256];
 
 const char* botsIP[] = {
 	"bot1.team4.uclaclass.isi.deterlab.net",
@@ -63,12 +64,13 @@ int main()
 		do
 		{
 			cout << "Input the command(1-Sync, 2-SYNAttack): ";
-			cin >> commandType;
-			if (commandType == 1){
-				cin.getline(time,256);
+			cin  >> commandType;
+			if (commandType == 2){
+				cout << "Attack time: XX XX XX XXXX" << endl;
+				cin.getline(attack_time,256);   // Digest the last newline
+				cin.getline(attack_time,256);   // Get the real attack_time
 			}
 		} while(commandType < 0 || commandType > 2);
-
 		// Send the command to bots;
 		for (int i = 0; i < botNum; i++)
 		{
@@ -113,6 +115,7 @@ char* syncCommand()
 
 char *attackCommand()
 {
-	char *command = (char *)"2 - SYN Attack";
+	char command[256];
+	sprintf(command,"2 - SYN Attack %s", attack_time);
 	return command;
 }
