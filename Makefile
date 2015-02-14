@@ -1,0 +1,1 @@
+g++ BotM.cpp -o BotM
