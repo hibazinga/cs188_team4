@@ -17,8 +17,8 @@
 
 using namespace std;
 
-char* syncCommand();
-char* attackCommand();
+void syncCommand(char* cmd);
+void attackCommand(char* cmd);
 char  attack_time[256];
 
 
@@ -80,7 +80,11 @@ int main()
 			cout << "Done" << endl;
 
 			// Sending a command;
-			char *command = (commandType == 1) ? syncCommand() : attackCommand();
+			char command[256];
+			if (commandType == 1)
+				syncCommand(command);
+			else
+				attackCommand(command);
 			memset(messageBuffer, 0, messageBufferSize);  // Empty the Buffer;
 			sprintf(messageBuffer, "%s", command);
 
@@ -101,15 +105,12 @@ int main()
 	return 0;
 }
 
-char* syncCommand()
+void syncCommand(char* cmd)
 {
-	char *command = (char *)"1 - Time Synchronization";
-	return command;
+	sprintf(cmd, "1 - Time Synchronization");
 }
 
-char *attackCommand()
+void attackCommand(char *cmd)
 {
-	char command[256];
-	sprintf(command,"2 - SYN Attack %s", attack_time);
-	return (char *)command;
+	sprintf(cmd,"2 - SYN Attack %s", attack_time);
 }
