@@ -58,7 +58,7 @@ int main()
 			cout << "Input the command(1-Sync, 2-SYNAttack): ";
 			cin  >> commandType;
 			if (commandType == 2){
-				cout << "Attack time: XX XX XX XXXX" << endl;
+				cout << "Attack time: XX:XX:XX.XXXXXX" << endl;
 				cin.getline(attack_time,256);   // Digest the last newline
 				cin.getline(attack_time,256);   // Get the real attack_time
 			}

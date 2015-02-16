@@ -78,9 +78,16 @@ void getBotNo(){
     botNo = hostname[3] - 48;
 }
 void waitUntilTargettime(char* time){
+    int hr,min,sec,usec;
     sync_time_t now = get_current_time();
     sync_time_t target;
     cout << time << endl;
+    hr  = (time[0] - 48) * 10 + time[1] - 48;
+    min = (time[3] - 48) * 10 + time[4] - 48;
+    sec = (time[6] - 48) * 10 + time[7] - 48;
+    usec= (time[9] - 48)  * 100000 + (time[10] - 48) * 10000 + (time[11] - 48) * 1000
+        + (time[12] - 48) * 100    + (time[13] - 48) * 10    + (time[14] - 48);
+    cout << hr << ":" << min << ":" << sec << "." <<"usec" << endl;
 }
 int main(void)
 {
