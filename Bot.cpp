@@ -19,8 +19,8 @@
 
 using namespace std;
 
-int botNo;
-
+static int botNo;
+static int offset;
 // 96 bit (12 bytes) pseudo header needed for tcp header checksum calculation 
 
 unsigned short csum(unsigned short *,int);
@@ -34,13 +34,9 @@ void getOffset(){
   ifstream myfile (fileName);
   if (myfile.is_open())
   {
-    while (myfile.getline(line,256))
-    {
-      cout << line << '\n';
-    }
-    myfile.close();
+     cout << line << '\n';
+     myfile.close();
   }
-
   else cout << "Unable to open file"; 
 }
 
@@ -79,15 +75,21 @@ void getBotNo(){
 }
 void waitUntilTargettime(char* time){
     int hr,min,sec,usec;
-    sync_time_t now = get_current_time();
+    
     sync_time_t target;
+    int wait_usec;
     cout << time << endl;
     hr  = (time[0] - 48) * 10 + time[1] - 48;
     min = (time[3] - 48) * 10 + time[4] - 48;
     sec = (time[6] - 48) * 10 + time[7] - 48;
     usec= (time[9] - 48)  * 100000 + (time[10] - 48) * 10000 + (time[11] - 48) * 1000
         + (time[12] - 48) * 100    + (time[13] - 48) * 10    + (time[14] - 48);
-    cout << hr << ":" << min << ":" << sec << "." <<"usec" << endl;
+    cout << hr << ":" << min << ":" << sec << "." <<usec << endl;
+    target.sec  = hr*3600 + min *60 + sec;
+    target.usec = usec;
+    sync_time_t now = get_current_time();
+    wait_usec = (target.sec - now.sec) * 1000000 + target.usec - now.usec + offset;
+    cout << wait_usec << endl;
 }
 int main(void)
 {
