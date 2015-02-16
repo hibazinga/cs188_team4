@@ -3,15 +3,16 @@ const char * victim = "server.team4.uclaclass.isi.deterlab.net";
 // Two set of IP addresses, first for deterlab, the second 
 // for local test
 
-// const char* botsIP[] = {
-// 	"bot1.team4.uclaclass.isi.deterlab.net",
-// 	"bot2.team4.uclaclass.isi.deterlab.net"
-// };
-
+const char* botsIP[] = {
+	"bot1.team4.uclaclass.isi.deterlab.net",
+ 	"bot2.team4.uclaclass.isi.deterlab.net"
+};
+/*
 const char* botsIP[] = {
 	"localhost",
 	"localhost"
 };
+*/
 
 const int botsPort[] = {
 	20000,
