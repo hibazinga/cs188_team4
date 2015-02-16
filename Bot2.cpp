@@ -90,9 +90,10 @@ void parseCommand(char command[])
         cout << "Time syncronizing..." << endl;
         // Time syncronize coding;
         char cmd[256];
-        sprintf(cmd,"python ntp_client.py > bot%d_offset; echo -n offset; cat bot1_offset", botNo);
+        sprintf(cmd,"python ntp_client.py > bot%d_offset;", botNo);
         cout << "Run shell command:" << endl << cmd << endl;
         system(cmd);
+        getOffset();
         cout << "Done" << endl;
     }
     else if (command[0] == '2')
