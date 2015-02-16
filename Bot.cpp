@@ -88,10 +88,11 @@ int main(void)
 	char messageBuffer[1024];
 	int messageBufferSize = sizeof(messageBuffer);
 	int UDPSocket;     // Socket connected to UDP;
-	int UDPPort = botsPort[botNo-1];  // UPD port used to reveive the command from bot master;
+	int UDPPort; 
 
     
     getBotNo();
+    UDPPort= botsPort[botNo-1];  // UPD port used to reveive the command from bot master;
     print_time();
 	cout << "Bot "<< botNo << " started" << endl << endl;	
 
