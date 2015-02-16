@@ -34,6 +34,7 @@ void getOffset(){
   ifstream myfile (fileName);
   if (myfile.is_open())
   {
+     myfile.getline(line,256);
      cout << line << '\n';
      myfile.close();
   }
@@ -84,7 +85,7 @@ void waitUntilTargettime(char* time){
     sec = (time[6] - 48) * 10 + time[7] - 48;
     usec= (time[9] - 48)  * 100000 + (time[10] - 48) * 10000 + (time[11] - 48) * 1000
         + (time[12] - 48) * 100    + (time[13] - 48) * 10    + (time[14] - 48);
-    cout << hr << ":" << min << ":" << sec << "." <<usec << endl;
+    cout << "parse time " << hr << ":" << min << ":" << sec << "." <<usec << endl;
     target.sec  = hr*3600 + min *60 + sec;
     target.usec = usec;
     sync_time_t now = get_current_time();
