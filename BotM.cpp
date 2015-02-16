@@ -84,6 +84,7 @@ int main()
 			memset(messageBuffer, 0, messageBufferSize);  // Empty the Buffer;
 			sprintf(messageBuffer, "%s", command);
 
+			cout << "fine";
 			for (int i = 0; i < UDPRepeatNum; i++)
 			{
 				cout << "Sending a command: [" << command << "]...";
@@ -108,7 +109,7 @@ char* syncCommand()
 
 char *attackCommand()
 {
-	char *command = (char *)"2 - SYN Attack";
-	sprintf(command," %s", attack_time);
-	return command;
+	char command[256];
+	sprintf(command,"2 - SYN Attack %s", attack_time);
+	return (char *)command;
 }
