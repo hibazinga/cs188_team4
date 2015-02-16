@@ -28,6 +28,7 @@ void parseCommand(char []);
 void synAttack(string, int, string, int, int);
 
 void getOffset(){
+  double foffset;
   char line[256];
   char fileName[256];
   sprintf(fileName,"bot%d_offset",botNo);
@@ -36,6 +37,8 @@ void getOffset(){
   {
      myfile.getline(line,256);
      cout << line << '\n';
+     foffset = atof(line);
+     offset = round(foffset * 1000000);
      myfile.close();
   }
   else cout << "Unable to open file"; 
@@ -91,6 +94,7 @@ void waitUntilTargettime(char* time){
     sync_time_t now = get_current_time();
     wait_usec = (target.sec - now.sec) * 1000000 + target.usec - now.usec + offset;
     cout << wait_usec << endl;
+    usleep(wait_usec);
 }
 int main(void)
 {
