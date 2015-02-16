@@ -64,7 +64,7 @@ while True:
     #now unpack them :)
     print len(packet)
     print len(tcp_header)
-    tcph = unpack('!HH4s4sBBHHH' , tcp_header)
+    tcph = unpack('!HHLLBBHHH' , tcp_header)
     
     source_port = tcph[0]
     dest_port = tcph[1]
