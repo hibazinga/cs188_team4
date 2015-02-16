@@ -32,7 +32,6 @@ int main()
 	int UDPPort = 25000;  // UPD port used to send the command to bots;
 	int UDPRepeatNum = 1;    // Send UDPRepeatNum commands for one time;
 	struct hostent *hostinfo = NULL; //Host name
-
 	cout << "Bort Master started" << endl << endl;
 
 	// Create a UDP socket to send the commands to bots;
