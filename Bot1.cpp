@@ -13,6 +13,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <sys/time.h>
+#include <fstream>
 #include "BotProtocol.h"
 
 using namespace std;
