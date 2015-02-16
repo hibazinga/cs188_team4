@@ -128,7 +128,7 @@ void parseCommand(char command[])
         cout << "SYN attacking..." << endl;
         hostinfo = gethostbyname(victim);
         cout << inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)) << endl;
-        synAttack(victim, 22000, victim, 80, 3);
+        //synAttack(victim, 22000, victim, 80, 3);
         cout << "Done" << endl;
     }
     else
