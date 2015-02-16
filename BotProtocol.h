@@ -19,6 +19,10 @@ const int botsPort[] = {
 	20010
 };
 
+typedef struct sync_time_struct{
+	int sec;
+	int usec;
+}sync_time_t;
 // 96 bit (12 bytes) pseudo header needed for tcp header checksum calculation 
 struct pseudo_header
 {

