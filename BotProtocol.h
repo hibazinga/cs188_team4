@@ -1,4 +1,4 @@
-const char * victim = "192.168.15.128";
+const char * victim = "server.team4.uclaclass.isi.deterlab.net";
 
 // Two set of IP addresses, first for deterlab, the second 
 // for local test
