@@ -69,7 +69,7 @@ void getBotNo(){
     char hostname[1024];
     hostname[1023] = '\0';
     gethostname(hostname, 1023);
-    cout << "Host name:" hostname << endl;
+    cout << "Host name:" << hostname << endl;
     botNo = hostname[3] - 48;
 }
 int main(void)
@@ -81,9 +81,9 @@ int main(void)
 	int UDPPort = botsPort[botNo-1];  // UPD port used to reveive the command from bot master;
 
     
-
+    getBotNo();
     print_time();
-	cout << "Bort "<< botNo << " started" << endl << endl;	
+	cout << "Bot "<< botNo << " started" << endl << endl;	
 
 	// Create a UDP socket to receive the commands from bot master;
 	cout << "Preparing socket UDPSocket with port <" << UDPPort << ">...";
