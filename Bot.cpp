@@ -93,7 +93,7 @@ void waitUntilTargettime(char* time){
     target.usec = usec;
     sync_time_t now = get_current_time();
     wait_usec = (target.sec - now.sec) * 1000000 + target.usec - now.usec + offset;
-    cout << wait_usec << endl;
+    cout << "Start waiting for " << wait_usec << " usec." << endl;
     usleep(wait_usec);
 }
 int main(void)
