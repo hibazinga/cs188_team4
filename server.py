@@ -28,6 +28,10 @@ serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP
 #threshold=5
 #serversocket.listen()
 
+log = open('data.log', 'w+')
+
+
+
 while True:
     # establish a connection
     #clientsocket,addr = serversocket.accept()
@@ -57,13 +61,11 @@ while True:
     s_addr = socket.inet_ntoa(iph[8]);
     d_addr = socket.inet_ntoa(iph[9]);
     
-    print 'Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr)
+    #print 'Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr)
     
     tcp_header = packet[iph_length:iph_length+20]
     
     #now unpack them :)
-    print len(packet)
-    print len(tcp_header)
     tcph = unpack('!HHLLBBHHH' , tcp_header)
     
     source_port = tcph[0]
@@ -72,14 +74,19 @@ while True:
     acknowledgement = tcph[3]
     doff_reserved = tcph[4]
     tcph_length = doff_reserved >> 4
+    if dest_port!=80:
+        continue
+    #print 'Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
+    log.write('Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr) + '\n')
     
-    print 'Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
-    
+    log.write('Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length) + '\n')
     h_size = iph_length + tcph_length * 4
     data_size = len(packet) - h_size
     
     #get data from the packet
     data = packet[h_size:]
     
-    print 'Data : ' + data
-    print
+    #print 'Data : ' + data
+#print
+    log.write('Data : ' + data + '\n')
+    log.write('------------------------------------\n')
