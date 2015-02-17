@@ -12,7 +12,7 @@ from struct import *
 #host = socket.gethostname()
 #HOST = socket.gethostbyname(socket.gethostname())
 
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
 #port = 9999
 
 # bind to the port
@@ -76,7 +76,14 @@ while True:
     tcph_length = doff_reserved >> 4
     if dest_port!=80:
         continue
-    #print 'Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
+        #print 'Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
+    
+    now = int(time.time()) #get current time
+    timeArray = time.localtime(now)
+    otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+
+    log.write('Time : ' +otherStyleTime + '\n')
+    
     log.write('Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr) + '\n')
     
     log.write('Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length) + '\n')
