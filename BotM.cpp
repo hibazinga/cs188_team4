@@ -32,7 +32,7 @@ int main()
 	int UDPPort = 25000;  // UPD port used to send the command to bots;
 	int UDPRepeatNum = 1;    // Send UDPRepeatNum commands for one time;
 	struct hostent *hostinfo = NULL; //Host name
-	cout << "Bort Master started" << endl << endl;
+	cout << "Bot Master started" << endl << endl;
 
 	// Create a UDP socket to send the commands to bots;
 	cout << "Preparing socket UDPSocket with port <" << UDPPort << ">...";
@@ -87,7 +87,7 @@ int main()
 			memset(messageBuffer, 0, messageBufferSize);  // Empty the Buffer;
 			sprintf(messageBuffer, "%s", command);
 
-			cout << "fine";
+			cout << "fine"<<endl;
 			for (int i = 0; i < UDPRepeatNum; i++)
 			{
 				cout << "Sending a command: [" << command << "]...";
