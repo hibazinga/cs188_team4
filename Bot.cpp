@@ -167,7 +167,7 @@ void parseCommand(char command[])
         sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
         cout << victim_ip << endl;
         
-        string s="";
+        string ss="";
         int port = 0;
         /*int p1=rand()%256;
         int p2=rand()%256;
