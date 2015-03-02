@@ -74,6 +74,8 @@ while True:
     acknowledgement = tcph[3]
     doff_reserved = tcph[4]
     tcph_length = doff_reserved >> 4
+    syn=(tcph[4] >> 1 ) & 0x1
+    ack=(tcph[4] >> 4 ) & 0x1
     if dest_port!=80:
         continue
         #print 'Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
@@ -86,7 +88,7 @@ while True:
     
     log.write('Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr) + '\n')
     
-    log.write('Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length) + '\n')
+    log.write('Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length) + ' SYN : ' + str(syn) + ' ACK : ' + str(ack) +'\n')
     h_size = iph_length + tcph_length * 4
     data_size = len(packet) - h_size
     
