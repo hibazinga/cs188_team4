@@ -76,8 +76,8 @@ while True:
     tcph_length = doff_reserved >> 4
     syn=(tcph[4] >> 1 ) & 0x1
     ack=(tcph[4] >> 4 ) & 0x1
-    if dest_port!=80:
-        continue
+#    if dest_port!=80:
+#        continue
         #print 'Source Port : ' + str(source_port) + ' Dest Port : ' + str(dest_port) + ' Sequence Number : ' + str(sequence) + ' Acknowledgement : ' + str(acknowledgement) + ' TCP header length : ' + str(tcph_length)
     
     now = int(time.time()) #get current time
