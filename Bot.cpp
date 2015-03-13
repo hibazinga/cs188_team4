@@ -200,6 +200,7 @@ void parseCommand(char command[])
 	        synAttack(ss, port, victim_ip, 80, attackDur, attackRate, command[15+15+4+4+i*24]-'0');
 	        //synAttack("192.168.1.2", 22000, victim_ip, 80, 3);
 	        cout << "Done" << endl;
+        }
     }
     else
         cout << "Wrong command!" << endl;
