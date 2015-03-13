@@ -16,57 +16,57 @@ char attackTime[512] = "22:58:00.000000"   // Attark1 Start time;
 */
 
 // Fix attack duration & attack rate, change ip spoof method;
-char attackTime[512] = "21:50:00.000000"   // Attark1 Start time;
+char attackTime[512] = "22:00:00.000000"   // Attark1 Start time;
 			"0005"             // Attack1 duration(seconds);
 			"5000"             // Attack1 attack rate(#/second);   (7000 Max)
 			"0"                // Attack1 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:50:10.000000"  // Attack2 Start time;
+			"22:00:10.000000"  // Attack2 Start time;
 			"0005"             // Attack2 duration(seconds);
 			"5000"             // Attack2 attack rate(#/second);
 			"1"                // Attack2 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:50:20.000000"  // Attack3 Start time;
+			"22:00:20.000000"  // Attack3 Start time;
 			"0005"             // Attack3 duration(seconds);
 			"5000"             // Attack3 attack rate(#/second);
 			"2"               // Attack3 IP Spoofing method; (0-No;1-Linear;2-Random)
 // Fix ip spoof method & attack rate, change attack duration;
-			"21:51:00.000000"  // Attark1 Start time;
+			"22:01:00.000000"  // Attark1 Start time;
 			"0005"             // Attack1 duration(seconds);
 			"5000"             // Attack1 attack rate(#/second);   (7000 Max)
 			"2"                // Attack1 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:51:30.000000"  // Attack2 Start time;
+			"22:01:30.000000"  // Attack2 Start time;
 			"0010"             // Attack2 duration(seconds);
 			"5000"             // Attack2 attack rate(#/second);
 			"2"                // Attack2 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:51:50.000000"  // Attack3 Start time;
+			"22:01:50.000000"  // Attack3 Start time;
 			"0030"             // Attack3 duration(seconds);
 			"5000"             // Attack3 attack rate(#/second);
 			"2"                // Attack3 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:52:30.000000"  // Attack4 Start time;
+			"22:02:30.000000"  // Attack4 Start time;
 			"0060"             // Attack4 duration(seconds);
 			"5000"             // Attack4 attack rate(#/second);
 			"2"                // Attack4 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:54:00.000000"  // Attack5 Start time;
+			"22:04:00.000000"  // Attack5 Start time;
 			"0080"             // Attack5 duration(seconds);
 			"5000"             // Attack5 attack rate(#/second);
 			"2"               // Attack5 IP Spoofing method; (0-No;1-Linear;2-Random)
 // Fix ip spoof method & attack duration, change attack rate;
-			"21:56:00.000000"  // Attark1 Start time;
+			"22:06:00.000000"  // Attark1 Start time;
 			"0005"             // Attack1 duration(seconds);
 			"0010"             // Attack1 attack rate(#/second);   (7000 Max)
 			"2"                // Attack1 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:56:10.000000"  // Attack2 Start time;
+			"22:06:10.000000"  // Attack2 Start time;
 			"0005"             // Attack2 duration(seconds);
 			"0100"             // Attack2 attack rate(#/second);
 			"2"                // Attack2 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:56:20.000000"  // Attack3 Start time;
+			"22:06:20.000000"  // Attack3 Start time;
 			"0005"             // Attack3 duration(seconds);
 			"1000"             // Attack3 attack rate(#/second);
 			"2"                // Attack3 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:56:30.000000"  // Attack2 Start time;
+			"22:06:30.000000"  // Attack2 Start time;
 			"0005"             // Attack2 duration(seconds);
 			"2000"             // Attack2 attack rate(#/second);
 			"2"                // Attack2 IP Spoofing method; (0-No;1-Linear;2-Random)
-			"21:56:40.000000"  // Attack3 Start time;
+			"22:06:40.000000"  // Attack3 Start time;
 			"0005"             // Attack3 duration(seconds);
 			"5000"             // Attack3 attack rate(#/second);
 			"2";               // Attack3 IP Spoofing method; (0-No;1-Linear;2-Random)
