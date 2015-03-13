@@ -29,7 +29,7 @@ serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP
 #serversocket.listen()
 
 log = open('data.log', 'w+')
-
+log.write('--------------\n')
 
 
 while True:
