@@ -79,7 +79,7 @@ int main()
 			cout << "Done" << endl;
 
 			// Sending a command;
-			char command[512];
+			char command[1024];
 			if (commandType == 1)
 				syncCommand(command);
 			else
