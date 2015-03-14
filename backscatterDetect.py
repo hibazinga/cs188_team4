@@ -8,8 +8,8 @@ r=sys.argv[1]
 path_in = r
 
 file=open(path_in, "r")
-threshold = 300 # 5 min = 300 sec
-attack_threshold = 500
+threshold = 30 # 5 min = 300 sec
+attack_threshold = 50
 
 line=file.readline()
 mode=1
@@ -40,7 +40,8 @@ white_list=set([])
 
 while line:
     if line[0]!='-':
-        print "data log format error"
+        print "data log format error - "
+        break
     
     line=file.readline();
     if not line:
@@ -49,11 +50,10 @@ while line:
         tuple1 = time.strptime(line[7:26], "%Y-%m-%d %H:%M:%S");
         seconds = time.mktime(tuple1)
         if s==0 or int(seconds)-s>threshold:
-            
             ## detection mechanism-2
             if mode==2:
-                maxrate=max(maxrate, curpkt/60.0)
-                if count>=25 and pkt_last-pkt_first>=60 and maxrate>=0.5:
+                maxrate=max(maxrate, curpkt/10.0)
+                if count>=1000 and pkt_last-pkt_first>=5 and maxrate>=1000:
                     print "Server is under DDoS Attack Mode 3!\n"
                     print "Total SYN-Attack Packets: "+str(count)+" pkts\n"
                     print "Start time: "+ time.strftime("%Y-%m-%d %H:%M:%S", pkt_first)+"\n"
@@ -73,7 +73,8 @@ while line:
             maxrate=-1.0
     
     else :
-        print "data log format error"
+        print "data log format error Time"
+        break
     
     line=file.readline();
     if line[0]=='V':   # Version : 4 IP Header Length : 5 TTL : 255 Protocol : 6 Source Address : 118.253.131.5 Destination Address : 192.168.3.145
@@ -82,25 +83,32 @@ while line:
         src_IP=tmp[17]
         dst_IP=tmp[21]
     else :
-        print "data log format error"
+        print "data log format error Version"
+        break
     
     line=file.readline();
     if line[0]=='S':   # Source Port : 42709 Dest Port : 1180 Sequence Number : 0 Acknowledgement : 0 TCP header length : 5 SYN : 1 ACK : 0
         tmp = line.split(" ")
         src_port=tmp[3]
         dst_port=tmp[7]
-    #syn=int(tmp[23])
-    #ack=int(tmp[26])
+        syn=int(tmp[22])
+        ack=int(tmp[25])
     else :
-        print "data log format error"
+        print "data log format error Source"
+        break
     
     line=file.readline();
     if line[0]=='D':   # Data : ABCDEFGHIJKLMNOPQRSTUVWXYZ
-        tmp = line.split(" ")
-        data_len=len(tmp[2])
+        data_len=len(line)-6
     else :
-        print "data log format error"
-    
+        print "data log format error Data"
+        break
+    line=file.readline()
+    while line[0]!='-':
+        print 'multi-line data'
+        data_len+=len(line)
+        line=file.readline()
+
     ## detect logic here
     if mode==1 :
         socket=src_IP
@@ -109,21 +117,17 @@ while line:
         socket+=dst_port
         
         if socket in white_list:
-            line=file.readline();
             continue
         
         if syn==0 :
             white_list.add(socket)
-            line=file.readline();
             continue
         
         if ack==1 :
             white_list.add(socket)
-            line=file.readline();
             continue
         if data_len > 900:
             white_list.add(socket)
-            line=file.readline();
             continue
         
         if pkt_first == -1:
@@ -152,17 +156,14 @@ while line:
         socket+=dst_port
         
         if socket in white_list:
-            line=file.readline();
             continue
         
         if syn==0 :
             white_list.add(socket)
-            line=file.readline();
             continue
         
         if ack==1 :
             white_list.add(socket)
-            line=file.readline();
             continue
         
         if list not in dict:
@@ -178,9 +179,9 @@ while line:
             pkt_first = seconds
             curtime = seconds
         pkt_last=seconds
-        if pkt_last - curtime>60:
+        if pkt_last - curtime>10:
             curtime = pkt_last
-            maxrate=max(maxrate, curpkt/60.0)
+            maxrate=max(maxrate, curpkt/10.0)
             curpkt=0
     
     elif mode==3:
@@ -192,21 +193,17 @@ while line:
         socket+=dst_port
         
         if socket in white_list:
-            line=file.readline();
             continue
         
         if syn==0 :
             white_list.add(socket)
-            line=file.readline();
             continue
         
         if ack==1 :
             white_list.add(socket)
-            line=file.readline();
             continue
         if data_len > 900:
             white_list.add(socket)
-            line=file.readline();
             continue
         if pkt_first == -1:
             pkt_first = seconds
@@ -228,4 +225,3 @@ while line:
             break
     
     ##
-    line=file.readline()
