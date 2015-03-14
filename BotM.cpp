@@ -19,7 +19,7 @@ using namespace std;
 
 void syncCommand(char* cmd);
 void attackCommand(char* cmd);
-char  attack_time[256];
+//char  attack_time[256];
 
 
 
