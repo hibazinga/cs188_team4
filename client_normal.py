@@ -4,7 +4,7 @@ import socket               # Import socket module
 from time import sleep
 
 s = socket.socket()         # Create a socket object
-host = socket.gethostname() # Get local machine name
+host = '192.168.1.39' # Get local machine name
 port = 1180                # Reserve a port for your service.
 
 s.connect((host, port))
