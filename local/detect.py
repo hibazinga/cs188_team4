@@ -1,9 +1,9 @@
-file.reimport sys
+import sys
 import time
 
 def det(last_pos, n_time):
     #r=sys.argv[1]
-    path_in = "data.log" 
+    path_in = "../../data.log" 
     print "calling detection ", n_time, " time", "print position", last_pos
     file=open(path_in, "r")
     
@@ -65,14 +65,14 @@ def det(last_pos, n_time):
         if line[0]=='T':   # Time : 2015-03-02 11:41:16
             tuple1 = time.strptime(line[7:26], "%Y-%m-%d %H:%M:%S");
             seconds = time.mktime(tuple1)
-            if s==0 or int(seconds)-s>attack_duration:
+            if s==0 or long(seconds)-s>=attack_duration:
                 #display the information
                 if s!= 0:
                     temp_res  = []
                     #print "For flow ", flow_num
-                    temp_res.append(flow_num)
-                    #print "macro flow number : ", macro_num
-                    temp_res.append(micro_num)
+                    #temp_res.append(flow_num)
+                    #print "macro flow number : ", macro_num    
+                    temp_res.append(macro_num)
                     #print "micro flow number: ", len(micro_set)
                     temp_res.append(len(micro_set))
                     packet_rate = macro_num * 1.0 /attack_duration
@@ -86,21 +86,20 @@ def det(last_pos, n_time):
                     judge = 0
                     if label_num > thresh * macro_num:
                         judge = 1
-                    if judge == 1:
-                        print 
+                    #if judge == 1:
+                     
                     #print "label of the flows", judge
                     labels.append(judge)
                     #print "------------------------------------------"
                     
                     result.append(temp_res)
-                    
+                    flow_num += 1
+                    print flow_num
                 # do all the computation here
                 
                 # update of parameters
                 s=seconds
                 macro_num = 0
-                flow_num = flow_num + 1
-                # clear
                 label_num = 0
                 micro_set.clear()
                 src_add.clear()
@@ -146,7 +145,7 @@ def det(last_pos, n_time):
             print "data log format error 4"
         
         line=file.readline()
-        while line[0]!='-':
+        while line[0]== '\n' or line not in '--------------------------------------\n':
             data_len+=len(line)
             line=file.readline()
         
@@ -161,12 +160,10 @@ def det(last_pos, n_time):
       
         total_entry = total_entry + 1
         macro_num = macro_num + 1
-        
+        #print flow_num
         #line=file.readline();
         #read the extra line here
         
-    
-    flow_num = flow_num
     last_pos = file.tell()
     file.close()
    

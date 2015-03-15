@@ -2,6 +2,7 @@ from detect import det
 import sys, select, os
 import threading
 import time
+import test
 
 
 '''
@@ -15,45 +16,23 @@ startDetect(n_time,last_pos)
 '''
 
 
-
-def run_ml(data, labels):
-	total = len(data)
-	num_train = int(total * 0.7)
-
-	train_data = []
-	train_labels = []
-	test_data  = []
-	test_labels = []
-
-	for i in range(num_train):
-		train_data.append(data[i])
-		train_labels.append(labels[i])
-
-	for i in range(num_train,total):
-	  	test_data.append(data[i])
-	  	test_labels.append(labels[i])
-
-	import nn
-	classifier_nn = nn.nn(train_data,train_labels)
-	correct = 0
-	for i in range(len(test_data)):
-		res = classifier_nn.test(test_data[i])
-		if res == test_labels[i]:
-			correct += 1
-	print "nn:", correct * 1.0 / len(test_data)
-
-	import knn
-	classifier_knn = knn.knn(train_data,train_labels)
-	correct = 0
-	for i in range(len(test_data)):
-		res = classifier_knn.test(test_data[i],5)
-		if res == test_labels[i]:
-			correct += 1
-	print "knn:", correct * 1.0 / len(test_data)
-
-    
 pos, data,labels = det(0,1)
-run_ml(data,labels)
+fdata   = open('data.txt', 'w')
+flabels = open('labels.txt', 'w')
+
+num = len(data)
+for i in range(num):
+    d = data[i]
+    l = labels[i]
+    for ele in d:
+      fdata.write(str(ele))
+      fdata.write(' ')
+    fdata.write(str(l))
+    fdata.write('\n')
+
+# test.ml(data, labels)
+
+
 '''
 #press enter to stop the process
 exe_interval = 20
@@ -72,7 +51,9 @@ while True:
     last_pos = temp_res[0]
     result = temp_res[1]
     print result
-    
+    for d in result:
+        test.test(d)
     n_time = n_time + 1
-    time.sleep(3)
+    time.sleep(30)
+
 '''

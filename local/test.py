@@ -4,17 +4,20 @@ res = []
 data = []
 labels = []
 
+
 # How to use
 def ml(d,l):
 	for ele in d:
 		data.append(ele)
 	for ele in l:
 		labels.append(ele)
-	run_ml()
+	res = []
+	for i in range(10):
+		run_ml()
 	output()
 	drawROC()
 
-def run_ml():
+def run_ml(k = 1):
 	total = len(data)
 	num_test = int(total * 0.3)
 
@@ -40,7 +43,15 @@ def run_ml():
 	# test
 	for i in range(len(test_data)):
 		d = test_data[i]
-		res.append([classifier_nn.test(d), classifier_knn.test(d,1), test_labels[i]])
+		res.append([classifier_nn.test(d), classifier_knn.test(d,k), test_labels[i]])
+
+def train(d, l):
+	import nn
+	classifier_nn = nn.nn(d,l)
+	import knn
+	classifier_knn = knn.knn(d,l)
+	return classifier_nn, classifier_knn
+
 
 def output():
 	for classifier in range(2):
@@ -108,13 +119,24 @@ def getFmeasurement(classifier):
 def getROCPoints(classifier):
 	points = [[0,0],[1,1]]
 	tmp = []
-	while (len(points) < 100):
-		run_ml()
-		tp, fp, fn, tn = cal_tp_fp_fn_tn(classifier)
-		if tp+fn > 0 and fp+tn>0:
-			y = tp * 1.0 / (tp+fn)
-			x = fp * 1.0 / (fp+tn)
-			points.append([x,y])
+	if classifier == 0: # NN
+		while (len(points) < 100):
+			res = []
+			run_ml()
+			tp, fp, fn, tn = cal_tp_fp_fn_tn(classifier)
+			if tp+fn > 0 and fp+tn>0:
+				y = tp * 1.0 / (tp+fn)
+				x = fp * 1.0 / (fp+tn)
+				points.append([x,y])
+	else:
+		for k in range(15):
+			res = []
+			run_ml(k+1)
+			tp, fp, fn, tn = cal_tp_fp_fn_tn(classifier)
+			if tp+fn > 0 and fp+tn>0:
+				y = tp * 1.0 / (tp+fn)
+				x = fp * 1.0 / (fp+tn)
+				points.append([x,y])
 
 	points.sort()
 	lx = [int(p[0]*100) for p in points]
@@ -141,4 +163,31 @@ def drawROC():
 
 # training = [[1,1],[1,-1],[-1,1],[-1,-1],[-1,1],[2,3],[0,1],[-2,3],[3,4],[8,9]]
 # labels   = [1,1,0,0,1,1,0,1,0,1]
-# ml(training,labels)	
+
+f   = open('data.txt', 'r')
+train_data   = []
+train_labels = []
+for line in f:
+	d = []
+	for u in line.split():
+		d.append(int(float(u)))
+	train_labels.append(d.pop())
+	train_data.append(d[:])
+classifier_nn, classifier_knn = train(train_data,train_labels)
+
+def test(d,nn=classifier_nn,knn=classifier_knn):
+	return nn.test(d), knn.test(d)
+
+num = len(train_data)
+res_nn = []
+res_knn = []
+for i in range(num):
+	d = train_data[i]
+	l = train_labels[i]
+	rnn, rknn = test(d)
+	res_nn.append(rnn)
+	res_knn.append(rknn)
+
+print train_labels
+print res_nn
+print res_knn

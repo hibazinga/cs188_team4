@@ -41,33 +41,3 @@ class nn:
 	def test(self,data_list):
 		return self.classify(data_list)
 
-# How to use
-
-  total = len()
-# num_train = int(total * 0.7)
-# training = []
-# train_labels = []
-# testing  = []
-# test_labels = []
-# for i in range(num_train):
-	 training.append()
-	 train_labels.append()  
-  for i in range(num_train,total):
-  	 testing.append()
-  	 test_labels.append()
-
-
-# import nn
-# classifier_nn = nn.nn(training,train_labels)
-  correct = 0
-  for i in range(len(testing)):
-  	  res = classifier_nn.test(testing[i])
-  	  if res == test_labels[i]:
-  	  		correct += 1
-  print correct * 1.0 / len(testing)
-
-
-
-# training = [[1,1],[1,-1],[-1,1],[-1,-1]]
-# labels   = [1,1,0,0]
-# testing  = [2,1]
