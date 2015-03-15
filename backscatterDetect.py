@@ -8,11 +8,12 @@ r=sys.argv[1]
 path_in = r
 
 file=open(path_in, "r")
-threshold = 30 # 5 min = 300 sec
-attack_threshold = 50
+output=open("predict","w+")
+threshold = 5 # sec
+attack_threshold = 5000
 
 line=file.readline()
-mode=1
+mode=2
 s=0
 src_IP=""
 dst_IP=""
@@ -26,13 +27,12 @@ count=0 # number of implicit tcp connection request
 dict={}
 pkt_first=-1
 pkt_last=-1
-
+timecount=0
 curpkt=0
 curtime=-1
 maxrate=-1.0
 
 white_list=set([])
-
 
 #after split:
 #[Version, :, 4, IP, Header, Length, :, 5, TTL, :, 255, Protocol, :, 6, Source, Address, :, 93.83.82.209, Destination, Address, :, 192.168.3.145]
@@ -41,6 +41,7 @@ white_list=set([])
 while line:
     if line[0]!='-':
         print "data log format error - "
+        print line
         break
     
     line=file.readline();
@@ -49,17 +50,28 @@ while line:
     if line[0]=='T':   # Time : 2015-03-02 11:41:16
         tuple1 = time.strptime(line[7:26], "%Y-%m-%d %H:%M:%S");
         seconds = time.mktime(tuple1)
-        if s==0 or int(seconds)-s>threshold:
+        if s==0:
+            s=seconds
+        if long(seconds)-s>=threshold:
             ## detection mechanism-2
             if mode==2:
-                maxrate=max(maxrate, curpkt/10.0)
-                if count>=1000 and pkt_last-pkt_first>=5 and maxrate>=1000:
-                    print "Server is under DDoS Attack Mode 3!\n"
-                    print "Total SYN-Attack Packets: "+str(count)+" pkts\n"
-                    print "Start time: "+ time.strftime("%Y-%m-%d %H:%M:%S", pkt_first)+"\n"
-                    print "End time: "+ time.strftime("%Y-%m-%d %H:%M:%S", pkt_last)+"\n"
-                    print "Attack Duration: "+str(pkt_last-pkt_first) + " seconds\n"
-                    print "Max Attack Rate: "+str(maxrate) + "\n"
+                if curpkt/1.0>100:
+                    timecount+=1
+                maxrate=max(maxrate, curpkt/1.0)
+                print "Server is under DDoS Attack Mode 2!\n"
+                print "Total SYN-Attack Packets: "+str(count)+" pkts\n"
+                timeArray = time.localtime(pkt_first)
+                print "Start time: "+ time.strftime("%Y-%m-%d %H:%M:%S", timeArray)+"\n"
+                timeArray = time.localtime(long(seconds))
+                print "End time: "+ time.strftime("%Y-%m-%d %H:%M:%S", timeArray)+"\n"
+                print "Syn Packets: ", count, "\n"
+                print "Attack Duration: "+str(timecount) + " seconds\n"
+                print "Max Attack Rate: "+str(maxrate) + "\n"
+                if count>=2500 and maxrate>=1000 and timecount>=3:
+                    output.write(str(1)+'\n')
+                else:
+                    output.write(str(0)+'\n')
+
             ##
             s=seconds
             # print s
@@ -71,9 +83,11 @@ while line:
             curpkt=0
             curtime=-1
             maxrate=-1.0
+            timecount=0
     
     else :
         print "data log format error Time"
+        print line
         break
     
     line=file.readline();
@@ -104,8 +118,8 @@ while line:
         print "data log format error Data"
         break
     line=file.readline()
-    while line[0]!='-':
-        print 'multi-line data'
+    while line=='\n' or (line not in '------------------------------------\n'):
+        #print 'multi-line data'
         data_len+=len(line)
         line=file.readline()
 
@@ -118,7 +132,6 @@ while line:
         
         if socket in white_list:
             continue
-        
         if syn==0 :
             white_list.add(socket)
             continue
@@ -134,7 +147,7 @@ while line:
             pkt_first = seconds
         pkt_last=seconds
         
-        if list not in dict:
+        if socket not in dict:
             dict[socket] = 1
             count+=1
         else :
@@ -143,10 +156,13 @@ while line:
             dict[socket]=dict[socket]+1
         
         if count>= attack_threshold:
-            print "Server is under DDoS Attack Mode 3!\n"
+            print "Server is under DDoS Attack Mode 1!\n"
             print "Total SYN-Attack Packets: "+str(count)+" pkts\n"
-            print "Start time: "+ time.strftime("%Y-%m-%d %H:%M:%S", pkt_first)+"\n"
-            print "End time: "+ time.strftime("%Y-%m-%d %H:%M:%S", pkt_last)+"\n"
+            #print pkt_first
+            timeArray = time.localtime(pkt_first)
+            print "Start time: "+ time.strftime("%Y-%m-%d %H:%M:%S", timeArray)+"\n"
+            timeArray = time.localtime(pkt_last)
+            print "End time: "+ time.strftime("%Y-%m-%d %H:%M:%S", timeArray)+"\n"
             break
     
     elif mode==2 :
@@ -165,23 +181,32 @@ while line:
         if ack==1 :
             white_list.add(socket)
             continue
-        
-        if list not in dict:
+        if socket not in dict:
             dict[socket] = 1
             count+=1
             curpkt+=1
+        '''
         else :
             if dict[socket]==1:
                 count-=1
                 curpkt-=1
-            dict[socket]=dict[socket]+1
+                dict[socket]=dict[socket]+1
+        '''
+        '''
+        if syn==1 and ack==0 and socket not in dict:
+            count+=1
+            curpkt+=1
+            dict[socket] = 1
+        '''
         if pkt_first == -1:
             pkt_first = seconds
             curtime = seconds
         pkt_last=seconds
-        if pkt_last - curtime>10:
+        if pkt_last - curtime>=1:
             curtime = pkt_last
-            maxrate=max(maxrate, curpkt/10.0)
+            if curpkt/1.0 > 100:
+                timecount+=1
+            maxrate=max(maxrate, curpkt/1.0)
             curpkt=0
     
     elif mode==3:
@@ -194,7 +219,6 @@ while line:
         
         if socket in white_list:
             continue
-        
         if syn==0 :
             white_list.add(socket)
             continue
@@ -209,7 +233,7 @@ while line:
             pkt_first = seconds
         pkt_last=seconds
         
-        if list not in dict:
+        if socket not in dict:
             dict[socket] = 1
             count+=1
         else :
