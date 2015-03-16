@@ -6,3 +6,7 @@
 !*.h
 !.gitignore
 !*.sh
+!local_detection/
+!backscatter_detection/
+!legitimate_users/
+!README

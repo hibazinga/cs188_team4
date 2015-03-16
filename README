@@ -1,0 +1,59 @@
+DDoS Implementation and Detection
+
+Team 4, CS188, UCLA
+
+Yanbin Ren	renyb1991@gmail.com
+Jing Zhao	jzhaoaf@ucla.edu
+Shijian Zheng	wind1689@gmail.com
+Yu Xie		xieyu@ucla.edu
+
+---------------------------------------
+FILE DESCRIPTION
+	
+	Bot.cpp						Code for bot slaves
+	BotM.cpp					Code for bot master
+	BotProtocol.h 					Code of protocol between bot slaves and bot master
+	iptables.sh 					Code for iptables config
+	Makefile                            		Makefile for Bot.cpp and BotM.cpp
+	ntp_client.py 					Code for event synchronization
+	ntplib.py 					Library for event synchronization
+	legitimate_users/ 				Code for generating and receiving legitimate traffic
+		client_normal.py  			Client side code
+		server_normal.py 			Server side code
+	local_detection/
+		main.py 				Main entry for the entire local detection
+		detect.py 				Code for parsing incoming traffic
+		test.py 				Code for testing and plot algorithms
+		knn.py			                Code for K Nearest Neighbor
+		nn.py 					Code for Neural Network
+	backscatter_detection/
+		backscatterDetect.py 			Code for backscatter detection
+		draw.py					Code for calculating metrics for backscatter approach and drawing figures
+
+HOW TO RUN THE CODE:
+0. Swap in deterlab experiment environment. And deploy the source code with $ git pull
+
+1. Start Botnet
+   1) Compile the code
+	$ make
+   2) Deploy Bot on bot slaves, and BotM on bot master. 
+   3) Run
+	$ sudo ./Bot
+	$ sudo ./BotM
+
+2. Start legitimate traffic
+   1) Deploy client_normal.py on client and server_normal.py on server
+   2) Run
+	$ sudo python client_normal.py
+	$ sudo python server_normal.py
+	
+3. Local detection
+   1) Run
+	$ python main.py
+
+4. Backscatter detection
+   1) Run
+	$ python backscatter.py
+	$ python draw.py
+
+
