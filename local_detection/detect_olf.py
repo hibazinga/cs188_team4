@@ -115,7 +115,7 @@ def det(last_pos, n_time):
                 data_size = 0
                 third_shake_num = 0
         else :
-            print "data log format error 1"
+            print "data log format error 1:",line
         
         line=file.readline();
         if line[0]=='V':   # Version : 4 IP Header Length : 5 TTL : 255 Protocol : 6 Source Address : 118.253.131.5 Destination Address : 192.168.3.145
@@ -124,7 +124,7 @@ def det(last_pos, n_time):
             src_IP=tmp[17]
             dst_IP=tmp[21]
         else :
-            print "data log format error 2"
+            print "data log format error 2",line
         
         line=file.readline();
         if line[0]=='S':   # Source Port : 42709 Dest Port : 1180 Sequence Number : 0 Acknowledgement : 0 TCP header length : 5 SYN : 1 ACK : 0
@@ -139,7 +139,7 @@ def det(last_pos, n_time):
             ack=int(tmp[25])
             
         else :
-            print "data log format error 3"
+            print "data log format error 3",line
 
         line=file.readline();
         if line[0]=='D':   # Data : ABCDEFGHIJKLMNOPQRSTUVWXYZ
@@ -150,7 +150,7 @@ def det(last_pos, n_time):
                 label_num = label_num + 1
                 #print label_num
         else :
-            print "data log format error 4"
+            print "data log format error 4",line
         
         line=file.readline()
         while line[0]== '\n' or line not in '--------------------------------------\n':
