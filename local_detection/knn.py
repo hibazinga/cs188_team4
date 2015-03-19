@@ -4,7 +4,7 @@ class knn:
 		self.labels = labels
 		self.featureNum = len(training[0])
 
-	def test(self,testing,k=1):
+	def test(self,testing,k = 10):
 		if len(testing) != self.featureNum:
 			print "Number of features error!"
 			return -1
@@ -20,7 +20,7 @@ class knn:
 		dis_list.sort()
 		#print dis_list
 
-		radiu = dis_list[k-1][0] * 1.1
+		radiu = dis_list[k-1][0]
 		if radiu == 0:
 			return self.labels[dis_list[k-1][1]]
 

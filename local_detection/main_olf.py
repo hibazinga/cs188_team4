@@ -16,13 +16,13 @@ def run():
     rnn, rknn = t.test(data[0])
     print "-------------------------------------------------------"
     if rnn  == 1 and rknn == 1:
-        print "Both NN and kNN detect a DDOS"
+        print "Both NN and kNN detect a DDoS"
     elif rknn == 1:
-        print "kNN detects a DDOS"
+        print "kNN detects a DDoS"
     elif rnn == 1:
-        print "NN detects a DDOS"
+        print "NN detects a DDoS"
     else:
-        print "No DDos!"
+        print "No DDoS!"
     print "-------------------------------------------------------"
 pos = 0
 n_time = 1
