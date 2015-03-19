@@ -14,13 +14,15 @@ def run():
     #print "labels:",labels
     n_time += 1
     rnn, rknn = t.test(data[0])
-    print "-----------------------------  Try to detect --------------------------"
-    if rnn  == 1:
-        print "NN detects a DDOS"
-    if rknn == 1:
-        print "KNN detects a DDOS"
-    if rnn == 1 and rknn == 1:
+    print "-------------------------------------------------------"
+    if rnn  == 1 and rknn == 1:
         print "Both NN and kNN detect a DDOS"
-    print "-----------------------------  Try to detect --------------------------"
+    elif rknn == 1:
+        print "kNN detects a DDOS"
+    elif rnn == 1:
+        print "NN detects a DDOS"
+    else 
+        print "No DDos!"
+    print "-------------------------------------------------------"
 pos = 0
 n_time = 1
