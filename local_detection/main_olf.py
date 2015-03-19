@@ -21,7 +21,7 @@ def run():
         print "kNN detects a DDOS"
     elif rnn == 1:
         print "NN detects a DDOS"
-    else 
+    else:
         print "No DDos!"
     print "-------------------------------------------------------"
 pos = 0
