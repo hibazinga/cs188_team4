@@ -1,4 +1,4 @@
-# server.py 
+6# server.py
 import socket,sys
 import time
 import fcntl
@@ -30,6 +30,8 @@ serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP
 
 log = open('data.log', 'w+')
 log.write('--------------\n')
+log.flush()
+
 
 
 while True:

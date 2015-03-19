@@ -31,6 +31,7 @@ serversocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP
 
 log = open('data.log', 'w+')
 log.write('--------------\n')
+log.flush()
 curtime=-1
 
 while True:
@@ -93,6 +94,7 @@ while True:
     else :
         if now - curtime >= 5:
             curtime = now
+            log.flush()
             m.run()
 
     log.write('Time : ' +otherStyleTime + '\n')
