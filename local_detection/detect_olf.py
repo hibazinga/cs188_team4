@@ -3,7 +3,7 @@ import time
 
 def det(last_pos, n_time):
     #r=sys.argv[1]
-    path_in = "../../data.log" 
+    path_in = "../data.log" 
     print "calling detection ", n_time, " time", "print position", last_pos
     file=open(path_in, "r")
     
@@ -33,7 +33,10 @@ def det(last_pos, n_time):
     label = 0
     thresh = 0.2
 
-    line=file.readline();
+    if n_time == 1:
+    	line=file.readline();
+    else:
+    	line="123"
     s=0
     src_IP=""
     dst_IP=""
@@ -60,6 +63,7 @@ def det(last_pos, n_time):
             print "data log format error"
     
         line=file.readline();
+        #print line
         if not line:
             break
         if line[0]=='T':   # Time : 2015-03-02 11:41:16
@@ -94,6 +98,10 @@ def det(last_pos, n_time):
                     
                     result.append(temp_res)
                     flow_num += 1
+                    last_pos = file.tell()
+                    file.close()
+                    return last_pos, result,labels
+
         #            print flow_num
                 # do all the computation here
                 
@@ -164,8 +172,7 @@ def det(last_pos, n_time):
         #line=file.readline();
         #read the extra line here
         
-    last_pos = file.tell()
-    file.close()
+    
    
     #Average Number of Packets in Per Flow(ANPPF).
     sum = 0

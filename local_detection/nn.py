@@ -2,7 +2,7 @@ import random
 
 class nn:
 	lambd = 0.2
-	num_of_loop = 100
+	num_of_loop = 1000
 	def __init__(self, training, labels):
 		self.train_data = training
 		self.labels = labels
