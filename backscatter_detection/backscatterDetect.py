@@ -58,7 +58,7 @@ while line:
                 if curpkt/1.0>100:
                     timecount+=1
                 maxrate=max(maxrate, curpkt/1.0)
-                print "Server is under DDoS Attack Mode 2!\n"
+               # print "Server is under DDoS Attack Mode 2!\n"
                 print "Total SYN-Attack Packets: "+str(count)+" pkts\n"
                 timeArray = time.localtime(pkt_first)
                 print "Start time: "+ time.strftime("%Y-%m-%d %H:%M:%S", timeArray)+"\n"
@@ -69,8 +69,10 @@ while line:
                 print "Max Attack Rate: "+str(maxrate) + "\n"
                 if count>=2500 and maxrate>=1000 and timecount>=3:
                     output.write(str(1)+'\n')
+                    print "Server is under DDoS Attack!\n"
                 else:
                     output.write(str(0)+'\n')
+                    print "NO ATTACK!\n"
 
             ##
             s=seconds
