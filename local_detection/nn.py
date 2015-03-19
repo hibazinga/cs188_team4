@@ -2,15 +2,21 @@ import random
 
 class nn:
 	lambd = 0.2
-	num_of_loop = 1000
-	def __init__(self, training, labels):
-		self.train_data = training
-		self.labels = labels
-		self.featureNum = len(training[0])
-		self.threshold = random.random()
-		self.w = [0] * self.featureNum
-		self.initWeight()
-		self.train()
+	num_of_loop = 100
+
+	def __init__(self, training, labels, w = [],th = 0):
+		if len(w) == 0:
+			self.train_data = training
+			self.labels = labels
+			self.featureNum = len(training[0])
+			self.threshold = random.random()
+			self.w = [0] * self.featureNum
+			self.initWeight()
+			self.train()
+		else:
+			self.w = w
+			self.featureNum = len(w)
+			self.threshold = th
 
 	def initWeight(self):
 		for i in range(self.featureNum):

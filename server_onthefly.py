@@ -95,7 +95,9 @@ while True:
         if now - curtime >= 5:
             curtime = now
             log.flush()
+            log.close()
             m.run()
+            log = open('data.log', 'a+')
 
     log.write('Time : ' +otherStyleTime + '\n')
     

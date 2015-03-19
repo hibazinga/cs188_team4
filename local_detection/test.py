@@ -191,3 +191,5 @@ for i in range(num):
 print "labels:      ", train_labels
 print "nn_result:   ", res_nn
 print "knn_result:  ", res_knn
+print classifier_nn.w
+print classifier_nn.threshold

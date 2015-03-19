@@ -1,5 +1,7 @@
 import pylab
 import random
+import nn
+import knn
 res = []
 data = []
 labels = []
@@ -45,10 +47,8 @@ def run_ml(k = 1):
 		d = test_data[i]
 		res.append([classifier_nn.test(d), classifier_knn.test(d,k), test_labels[i]])
 
-def train(d, l):
-	import nn
-	classifier_nn = nn.nn(d,l)
-	import knn
+def train(d, l, w, th):
+	classifier_nn = nn.nn(d,l,w,th)
 	classifier_knn = knn.knn(d,l)
 	return classifier_nn, classifier_knn
 
@@ -164,16 +164,19 @@ def drawROC():
 # training = [[1,1],[1,-1],[-1,1],[-1,-1],[-1,1],[2,3],[0,1],[-2,3],[3,4],[8,9]]
 # labels   = [1,1,0,0,1,1,0,1,0,1]
 
-f   = open('./local_detection/data.txt', 'r')
+f   = open('data.txt', 'r')
 train_data   = []
 train_labels = []
+w = [-195810.7621348925, 68488.99265190709, -38897.842134328814, 68488.7823538183, 13755.655375035134]
+th = 813.652987128
+
 for line in f:
 	d = []
 	for u in line.split():
 		d.append(int(float(u)))
 	train_labels.append(d.pop())
 	train_data.append(d[:])
-classifier_nn, classifier_knn = train(train_data,train_labels)
+classifier_nn, classifier_knn = train(train_data,train_labels,w,th)
 
 def test(d,nn=classifier_nn,knn=classifier_knn):
 	return nn.test(d), knn.test(d)
