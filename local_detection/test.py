@@ -181,13 +181,15 @@ def test(d,nn=classifier_nn,knn=classifier_knn):
 num = len(train_data)
 res_nn = []
 res_knn = []
+sum_l = 0
 for i in range(num):
 	d = train_data[i]
 	l = train_labels[i]
 	rnn, rknn = test(d)
 	res_nn.append(rnn)
 	res_knn.append(rknn)
-
+	sum_l += l
+print sum(res_nn), sum_l
 print "labels:      ", train_labels
 print "nn_result:   ", res_nn
 print "knn_result:  ", res_knn
