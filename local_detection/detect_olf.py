@@ -65,6 +65,7 @@ def det(last_pos, n_time):
         line=file.readline();
         #print line
         if not line:
+        	print "jump out of line"
             break
         if line[0]=='T':   # Time : 2015-03-02 11:41:16
             tuple1 = time.strptime(line[7:26], "%Y-%m-%d %H:%M:%S");
