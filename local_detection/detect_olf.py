@@ -3,7 +3,7 @@ import time
 
 def det(last_pos, n_time):
     #r=sys.argv[1]
-    path_in = "../data.log" 
+    path_in = "./data.log" 
     print "calling detection ", n_time, " time", "print position", last_pos
     file=open(path_in, "r")
     
@@ -22,7 +22,7 @@ def det(last_pos, n_time):
     
     total_entry = 0 # total number of entries during this reading file
     flow_num = 0 #total number of flow
-    
+    label_num = 0    
     macro_num = 0 #number of macro flow: number of packets in any time interval
     micro_num = 0 #number of micro flow: flow with the same four features
     third_shake_num = 0
@@ -183,7 +183,7 @@ def det(last_pos, n_time):
     print "Total flows :", flow_num 
 
 
-	temp_res  = []
+    temp_res  = []
     #print "For flow ", flow_num
     #temp_res.append(flow_num)
     #print "macro flow number : ", macro_num    
@@ -222,6 +222,6 @@ def det(last_pos, n_time):
 
 
 
- 	last_pos = file.tell()
+    last_pos = file.tell()
     file.close()    
     return last_pos, result,labels
