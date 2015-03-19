@@ -96,7 +96,7 @@ while True:
             curtime = now
             log.flush()
             m.run()
-
+            time.sleep(0.1)
     log.write('Time : ' +otherStyleTime + '\n')
     
     log.write('Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr) + '\n')
