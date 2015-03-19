@@ -63,9 +63,9 @@ def det(last_pos, n_time):
             print "data log format error",
     
         line=file.readline();
+        print "1 ",line
         #print line
         if not line:
-           print "jump out of line"
            break
         if line[0]=='T':   # Time : 2015-03-02 11:41:16
             tuple1 = time.strptime(line[7:26], "%Y-%m-%d %H:%M:%S");
@@ -119,6 +119,7 @@ def det(last_pos, n_time):
             print "data log format error 1:",line
         
         line=file.readline();
+        print "2 ",line
         if line[0]=='V':   # Version : 4 IP Header Length : 5 TTL : 255 Protocol : 6 Source Address : 118.253.131.5 Destination Address : 192.168.3.145
             tmp = line.split(" ")
             protocol=tmp[13]
@@ -128,6 +129,7 @@ def det(last_pos, n_time):
             print "data log format error 2",line
         
         line=file.readline();
+        print "3 ",line
         if line[0]=='S':   # Source Port : 42709 Dest Port : 1180 Sequence Number : 0 Acknowledgement : 0 TCP header length : 5 SYN : 1 ACK : 0
             tmp = line.split(" ")
             src_port=tmp[3]
@@ -143,6 +145,7 @@ def det(last_pos, n_time):
             print "data log format error 3",line
 
         line=file.readline();
+        print "4 ",line
         if line[0]=='D':   # Data : ABCDEFGHIJKLMNOPQRSTUVWXYZ
             data_len=len(line)-6
             tmp = line.split(' ')
@@ -154,6 +157,7 @@ def det(last_pos, n_time):
             print "data log format error 4",line
         
         line=file.readline()
+        print "5 ",line
         while line[0]== '\n' or line not in '--------------------------------------\n':
             data_len+=len(line)
             line=file.readline()
