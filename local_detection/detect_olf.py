@@ -4,7 +4,7 @@ import time
 def det(last_pos, n_time):
     #r=sys.argv[1]
     path_in = "./data.log" 
-    print "calling detection ", n_time, " time", "print position", last_pos
+    #print "Calling"
     file=open(path_in, "r")
     
     file.seek(last_pos) #seek the write position of writing
@@ -35,7 +35,7 @@ def det(last_pos, n_time):
 
     if n_time == 1:
     	line=file.readline();
-    	print "0 ",line
+    	#print "0 ",line
     else:
     	line="123"
     s=0
@@ -60,12 +60,12 @@ def det(last_pos, n_time):
     #[Source, Port, :, 39270, Dest, Port, :, 1180, Sequence, Number, :, 0, Acknowledgement, :, 0, TCP, header, length, :, 5, SYN, :, 1, ACK, :, 0]
 
     while line:
-    	print "----------------------------------------------------------------"
-        if line[0]!='-':
-            print "data log format error",
+    	#print "----------------------------------------------------------------"
+        #if line[0]!='-':
+         #   print "data log format error",
     
         line=file.readline();
-        print "1 ",line
+        #print "1 ",line
         #print line
         if not line:
            break
@@ -121,7 +121,7 @@ def det(last_pos, n_time):
             print "data log format error 1:",line
         
         line=file.readline();
-        print "2 ",line
+        #print "2 ",line
         if line[0]=='V':   # Version : 4 IP Header Length : 5 TTL : 255 Protocol : 6 Source Address : 118.253.131.5 Destination Address : 192.168.3.145
             tmp = line.split(" ")
             protocol=tmp[13]
@@ -131,7 +131,7 @@ def det(last_pos, n_time):
             print "data log format error 2",line
         
         line=file.readline();
-        print "3 ",line
+        #print "3 ",line
         if line[0]=='S':   # Source Port : 42709 Dest Port : 1180 Sequence Number : 0 Acknowledgement : 0 TCP header length : 5 SYN : 1 ACK : 0
             tmp = line.split(" ")
             src_port=tmp[3]
@@ -147,7 +147,7 @@ def det(last_pos, n_time):
             print "data log format error 3",line
 
         line=file.readline();
-        print "4 ",line
+        #print "4 ",line
         if line[0]=='D':   # Data : ABCDEFGHIJKLMNOPQRSTUVWXYZ
             data_len=len(line)-6
             tmp = line.split(' ')
@@ -159,7 +159,7 @@ def det(last_pos, n_time):
             print "data log format error 4",line
         
         line=file.readline()
-        print "5 ",line
+        #print "5 ",line
         while line[0]== '\n' or line not in '--------------------------------------\n':
             data_len+=len(line)
             line=file.readline()
@@ -184,10 +184,10 @@ def det(last_pos, n_time):
     #Average Number of Packets in Per Flow(ANPPF).
     sum = 0
     
-    print "Information for this reading: "
-    print "Total Packets :" ,total_entry
+#    print "Information for this reading: "
+ #   print "Total Packets :" ,total_entry
     flow_num = flow_num-1
-    print "Total flows :", flow_num 
+  #  print "Total flows :", flow_num 
 
 
     temp_res  = []
@@ -224,12 +224,12 @@ def det(last_pos, n_time):
 
 
      
-    print len(result)
-    print len(labels)
+    #print len(result)
+    #print len(labels)
 
 
 
     last_pos = file.tell()
-    print "last_pos", last_pos
+    #print "last_pos", last_pos
     file.close()    
     return last_pos, result,labels
