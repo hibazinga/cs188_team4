@@ -1,7 +1,7 @@
 const char * victim = "server.team4.uclaclass.isi.deterlab.net";
 		
 // Add the attack times and durations into one char[];		
-char attackTime[512] = "15:42:00.000000"   // Attark1 Start time;		
+char attackTime[512] = "15:46:00.000000"   // Attark1 Start time;		
 			"0100"             // Attack1 duration(seconds);		
 			"8000"             // Attack1 attack rate(#/second);   (7000 Max)		
 			"2"                // Attack1 IP Spoofing method; (0-No;1-Linear;2-Random)		
