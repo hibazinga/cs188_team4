@@ -7,7 +7,7 @@ def det(last_pos, n_time):
     print "calling detection ", n_time, " time", "print position", last_pos
     file=open(path_in, "r")
     
-    file.seek(last_pos) #seek the write position of writing
+    #file.seek(last_pos) #seek the write position of writing
     
     #for each macro-flow 
     #number of distinct source ip
