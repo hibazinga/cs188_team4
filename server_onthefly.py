@@ -3,7 +3,6 @@ import socket,sys
 import time
 import fcntl
 from struct import *
-import test.py
 
 import local_detection.main_olf as m
 
