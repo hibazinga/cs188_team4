@@ -67,13 +67,15 @@ while line:
                 print "Syn Packets: ", count, "\n"
                 print "Attack Duration: "+str(timecount) + " seconds\n"
                 print "Max Attack Rate: "+str(maxrate) + "\n"
+                print "----------------------\n"
                 if count>=2500 and maxrate>=1000 and timecount>=3:
                     output.write(str(1)+'\n')
                     print "Server is under DDoS Attack!\n"
                 else:
                     output.write(str(0)+'\n')
                     print "NO ATTACK!\n"
-
+                print "-----------------------\n"
+                time.sleep(0.5)
             ##
             s=seconds
             # print s
