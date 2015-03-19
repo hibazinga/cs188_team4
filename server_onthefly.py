@@ -95,8 +95,10 @@ while True:
         if now - curtime >= 5:
             curtime = now
             log.flush()
+            log.close()
             m.run()
-            time.sleep(0.1)
+            log = open('data.log', 'a+')
+
     log.write('Time : ' +otherStyleTime + '\n')
     
     log.write('Version : ' + str(version) + ' IP Header Length : ' + str(ihl) + ' TTL : ' + str(ttl) + ' Protocol : ' + str(protocol) + ' Source Address : ' + str(s_addr) + ' Destination Address : ' + str(d_addr) + '\n')
