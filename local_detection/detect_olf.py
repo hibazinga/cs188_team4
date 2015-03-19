@@ -35,6 +35,7 @@ def det(last_pos, n_time):
 
     if n_time == 1:
     	line=file.readline();
+    	print "0 ",line
     else:
     	line="123"
     s=0
@@ -59,6 +60,7 @@ def det(last_pos, n_time):
     #[Source, Port, :, 39270, Dest, Port, :, 1180, Sequence, Number, :, 0, Acknowledgement, :, 0, TCP, header, length, :, 5, SYN, :, 1, ACK, :, 0]
 
     while line:
+    	print "----------------------------------------------------------------"
         if line[0]!='-':
             print "data log format error",
     
