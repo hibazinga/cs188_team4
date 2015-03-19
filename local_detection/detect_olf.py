@@ -223,6 +223,6 @@ def det(last_pos, n_time):
 
 
     last_pos = file.tell()
-	print "last_pos", last_pos
+    print "last_pos", last_pos
     file.close()    
     return last_pos, result,labels
