@@ -3,7 +3,7 @@ import time
 
 def det(last_pos, n_time):
     #r=sys.argv[1]
-    path_in = "../../data.log" 
+    path_in = "./data.log" 
     print "calling detection ", n_time, " time", "print position", last_pos
     file=open(path_in, "r")
     
