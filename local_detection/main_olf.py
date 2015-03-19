@@ -7,7 +7,7 @@ import test_olf as t
 def run():
     global pos
     global n_time
-    print pos, n_time
+    print "start point: ", pos, n_time
     pos, data,labels = det(pos,n_time)
     print "pos:",pos
     print "data: ",data

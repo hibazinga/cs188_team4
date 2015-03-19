@@ -60,7 +60,7 @@ def det(last_pos, n_time):
 
     while line:
         if line[0]!='-':
-            print "data log format error"
+            print "data log format error",
     
         line=file.readline();
         #print line
@@ -223,5 +223,6 @@ def det(last_pos, n_time):
 
 
     last_pos = file.tell()
+	print "last_pos", last_pos
     file.close()    
     return last_pos, result,labels
